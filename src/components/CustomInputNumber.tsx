@@ -115,6 +115,7 @@ const CustomInputNumber = ({ min, max, step, name, value, disabled, disableInc, 
                     if (value >= max) value = max;
                     if (value <= min) value = min;
                     dispatch({ type: Action.set, payload: value })
+                    e.target.value = value.toString();
                     onBlur(e)
                 }}
                 onInput={() => {

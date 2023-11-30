@@ -26,7 +26,7 @@ const App = () => {
     }
 
     return (
-        <Container>
+        <Container sx={{ width: 400 }}>
 
             <Stack direction='column' spacing={2}>
                 <Box>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography, Divider } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import { IRoom } from '../model/Room'
 import CustomInputNumber from './CustomInputNumber'
 
@@ -28,6 +29,9 @@ const RoomAllocation = ({ guest, room, onChange }: IProps) => {
         let temp_rooms = [...rooms];
         temp_rooms.splice(index, 1, room)
 
+        const totleCount = getTotalCount(temp_rooms);
+        if (totleCount > guest) return;
+
         setRooms(temp_rooms)
     }
 
@@ -36,15 +40,20 @@ const RoomAllocation = ({ guest, room, onChange }: IProps) => {
         console.log('onBlur', name, value);
     }
 
-    const totleCount = rooms.reduce((a, b) => {
-        return a + b.adult + b.child
-    }, 0)
+    const getTotalCount = (rooms: Array<IRoom>) => {
+        return rooms.reduce((a, b) => {
+            return a + b.adult + b.child
+        }, 0)
+    }
+
+    const totleCount = getTotalCount(rooms);
+    const availableCount = guest - totleCount;
 
     return (
         <Box>
             <Typography>{`住客人數 : ${guest} 人 / ${room} 房 `}</Typography>
             <Box sx={{ backgroundColor: '#B0E2FF', p: 1, borderRadius: 1, mt: 1, mb: 1 }}>
-                <Typography>{`尚未分配人數 ${guest - totleCount} 人`}</Typography>
+                <Typography sx={{ color: grey[700] }}>{`尚未分配人數 ${availableCount} 人`}</Typography>
             </Box>
             <Stack direction='column' spacing={8}>
                 {rooms.map((r, index) => {
@@ -53,11 +62,12 @@ const RoomAllocation = ({ guest, room, onChange }: IProps) => {
 
                     return (
                         <Box key={index}>
-                            <Box>{`房間 ${r.adult + r.child} 人`}</Box>
+                            <Box>{`房間 : ${r.adult + r.child} 人`}</Box>
 
-                            <Stack direction='row' spacing={10}>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <Typography>大人</Typography>
+                            <Stack direction='row' spacing={10} sx={{ mt: 1 }}>
+                                <Box sx={{ alignItems: 'top', width: 80 }}>
+                                    <Typography sx={{ mt: 1 }}>大人</Typography>
+                                    <Typography sx={{ color: grey[500] }}>年齡 20+</Typography>
                                 </Box>
                                 <Box>
                                     <CustomInputNumber
@@ -72,12 +82,11 @@ const RoomAllocation = ({ guest, room, onChange }: IProps) => {
                                         onBlur={handleBlur}
                                     />
                                 </Box>
-
                             </Stack>
 
                             <Stack direction='row' spacing={10}>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <Typography>小孩</Typography>
+                                <Box sx={{ alignItems: 'top', width: 80 }}>
+                                    <Typography sx={{ mt: 1 }}>小孩</Typography>
                                 </Box>
                                 <Box>
                                     <CustomInputNumber
@@ -94,6 +103,8 @@ const RoomAllocation = ({ guest, room, onChange }: IProps) => {
                                 </Box>
 
                             </Stack>
+
+                            <Divider />
                         </Box>
                     )
                 })}
