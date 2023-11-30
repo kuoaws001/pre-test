@@ -14,6 +14,8 @@ interface IProps {
     name: string;
     value: number;
     disabled: boolean;
+    disableInc?: boolean;
+    disableDec?: boolean;
     onChange: (e: any) => void;
     onBlur: (e: any) => void;
 }
@@ -46,21 +48,26 @@ const qtyReducer = (min: number, max: number) => {
     }
 }
 
-const CustomInputNumber = ({ min, max, step, name, value, disabled, onChange, onBlur }: IProps) => {
+const CustomInputNumber = ({ min, max, step, name, value, disabled, disableInc, disableDec, onChange, onBlur }: IProps) => {
 
+    const [init, setInit] = useState(true);
     const [state, dispatch] = useReducer(qtyReducer(min, max), { qty: value });
     const [action, setAction] = useState('');
 
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        const emitChangeEvent = () => {
-            let e = new Event('change', { bubbles: true })
-            inputRef.current && inputRef.current.dispatchEvent(e)
-            onChange(e)
-        }
+        if (init) {
+            setInit(false)
+        } else {
+            const emitChangeEvent = () => {
+                let e = new Event('change', { bubbles: true })
+                inputRef.current && inputRef.current.dispatchEvent(e)
+                onChange(e)
+            }
 
-        emitChangeEvent();
+            emitChangeEvent();
+        }
     }, [state.qty])
 
     useEffect(() => {
@@ -88,11 +95,11 @@ const CustomInputNumber = ({ min, max, step, name, value, disabled, onChange, on
     return (
         <div>
             <button
-                className={`btn-box ${state.qty <= min || disabled ? 'disable' : ''}`}
+                className={`btn-box ${state.qty <= min || disabled || disableDec ? 'disable' : ''}`}
                 onMouseDown={() => setAction(Action.decrement)}
                 onMouseUp={() => setAction(Action.stop)}
                 onClick={() => dispatch({ type: Action.decrement, payload: step })}
-                disabled={disabled}
+                disabled={disabled || disableDec}
             >
                 <span>-</span>
             </button>
@@ -116,11 +123,11 @@ const CustomInputNumber = ({ min, max, step, name, value, disabled, onChange, on
                 disabled={disabled}
             />
             <button
-                className={`btn-box ${state.qty >= max || disabled ? 'disable' : ''}`}
+                className={`btn-box ${state.qty >= max || disabled || disableInc ? 'disable' : ''}`}
                 onMouseDown={() => setAction(Action.increment)}
                 onMouseUp={() => setAction(Action.stop)}
                 onClick={() => dispatch({ type: Action.increment, payload: step })}
-                disabled={disabled}
+                disabled={disabled || disableInc}
             >
                 <span>+</span>
             </button>
