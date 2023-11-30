@@ -1,0 +1,46 @@
+.btn-box {
+    width: 48px;
+    height: 48px;
+    margin: 8px;
+    background-color: #B0E2FF;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    border: 1px solid #B0E2FF;
+    color: #4F94CD;
+}
+
+.btn-box:hover {
+    background-color: #87CEFA;
+    cursor: pointer;
+}
+
+.disable {
+    background-color:white;
+    opacity: 0.50;
+}
+
+.disable:hover {
+    background-color:white;
+    opacity: 0.50;
+    cursor: not-allowed;
+}
+
+.number-input-box {
+    width: calc(48px);
+    line-height: calc(44px);
+    margin: 8px;
+    text-align: center;
+    font-weight: normal;
+    font-size: 16px;
+    background-color: white;
+    color: rgb(89, 89, 89);
+    box-sizing: border-box;
+    border: 1px solid rgb(191, 191, 191);
+    border-radius: 4px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
